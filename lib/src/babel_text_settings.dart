@@ -16,7 +16,8 @@ class BabelTextSettings {
     '<u>':
         (context, currentStyle) =>
             currentStyle.copyWith(decoration: TextDecoration.underline),
-    // Italico
+
+    // Italic
     '<i>':
         (context, currentStyle) =>
             currentStyle.copyWith(fontStyle: FontStyle.italic),
