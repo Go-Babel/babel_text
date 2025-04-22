@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:collection';
-import 'package:babel_text/src/models/babel_tooltip.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 part 'babel_text_component.dart';
 part 'babel_text_inline_span.dart';
 part 'babel_text_settings.dart';
+part 'models/babel_tooltip.dart';
 
 const TextStyle _kBlankStyle = TextStyle();
 

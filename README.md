@@ -1,27 +1,24 @@
 ### ▶️ Babel_text: A package for easy dynamic text manipulation.
-A highly customizable ```Text``` compoent.
-
-## 🌟 Test the live demo!
-<b>[Test the package in a online web demo:](https://igormidev.github.io/Babel_text)</b><br>
-[https://igormidev.github.io/Babel_text](https://igormidev.github.io/Babel_text)
+A easy and highly customizable ```Text``` compoent. Change dynamically styles, add intuitively onTap functions in texts, easly display tooltip messages and more!
 
 ### 🗂️ *Summary*
-- How to use
-    - Mapping custom style
-    - Mapping custom onTap
-    - Mapping custom inner widget
-    - Mapping custom tooltip hover text
-- Combining styles
-- Inline span
-- How to config default settings
-    - What are the default settings ✨
-    - With settings function
-    - With default component configuration
+- [How to use]( #how-to-use)
+    - [Mapping custom style](#mapping-custom-style)
+    - [Mapping custom onTap](#mapping-custom-ontap)
+    - [Mapping custom inner widgets](#mapping-custom-inner-widgets)
+    - [Mapping custom tooltip hover text](#mapping-custom-tooltip-hover-text)
+- [Combining styles](#combining-styles)
+- [Inline span](#inline-span)
+- [How to config default settings](#how-to-config-default-settings)
+    - [What are the default settings?](#what-are-the-default-settings) ✨✨
+    - [Add default settings with configuration method](#add-default-settings-with-configuration-method)
+    - [Add default settings with a custom default widget](#add-default-settings-with-a-custom-default-widget)
 
 # How to use
 The usage of it *could not* be more simple.<br>See the bellow guide-lines<br>
 
-### Style dynamic change
+# Mapping custom style
+> ### Dynamic change text style
 What to bold a text whenever you surround it with the _"*"_ caracter?
 Just type the following code:
 
@@ -35,7 +32,8 @@ BabelText(
 ),
 ```
 
-### On text tap callback
+# Mapping custom onTap
+> ### Create "on text tap" callbacks
 What to navigate to a screen when tapping a word? Surround
 the target texts with a key that maps to an function!
 
@@ -50,15 +48,34 @@ BabelText(
 ),
 ```
 
-### Display a widget between texts
-You can add an widget in any place in the text. Just map it 
-whatever you want and use the mapped symbol in the text!<br>
+# Mapping custom inner widgets
+> ### Display any widget between texts
+You can add an widget _(💡 like an icon!)_ in any place in the text, between any words.<p>Just map it 
+to whatever you want and use the mapped symbol in the text!<br>
 In the example bellow, let's display a handshake icon widget.
 ```dart
 BabelText(
   text: 'Handshake widget: @@. Amazing!',
   innerWidgetMapping: {
     '@@': (context, currentStyle) => const Icon(Icons.handshake),
+  },
+),
+```
+
+# Mapping custom tooltip hover text
+> ### Display a tooltip message when the user hover's above an target text
+You can add an widget _(💡 like an icon!)_ in any place in the text, between any words.<p>Just map it 
+to whatever you want and use the mapped symbol in the text!<br>
+In the example bellow, let's display a handshake icon widget.
+```dart
+BabelText(
+  text: 'Hello <description>world!<description>',
+  onHoverTooltipMapping: {
+    '<description>': (context, currentStyle) {
+      return BabelTooltipMessage(
+        'I will be displayed when the user makes a hover action in the "world" text!',
+      );
+    },
   },
 ),
 ```
@@ -116,7 +133,7 @@ You can make the default configurations mapping of theme, widgets and functions 
 Using the "_set settings function_", or with default widget.
 
 
-## What are the default settings
+## What are the default settings?
 Some default sytle configurations are already made. You can change them if you wan't.
 The default settings are:
 - Bold<p>`<b>`bold`<b>`
@@ -128,7 +145,7 @@ The default settings are:
 - With grey color<p>`<gC>`With grey color`<gC>`
 
 
-## Using the settings function
+## Add default settings with configuration method
 Inside the main function, configure the default mapping.
 
 > ⚠️ Note:<br>
@@ -182,8 +199,11 @@ void main() {
     },
   });
   BabelTextSettings.instance.defaultWidgetMapping({
-  'check': (context,currentStyle) => const Icon(Icons.check), 
-  '@@': (context,currentStyle) => const Icon(Icons.ac_unit), 
+    'check': (context,currentStyle) => const Icon(Icons.check), 
+    '@@': (context,currentStyle) => const Icon(Icons.ac_unit), 
+  });
+  BabelTextSettings.instance.defaultOnHoverTooltipMapping({
+    '<tappable>': (context,currentStyle) => const BabelTooltipMessage('Click to open'),
   });
   runApp(const MyApp());
 }
@@ -193,7 +213,7 @@ void main() {
 
 
 
-## Using the custom default widget functions
+## Add default settings with a custom default widget
 Another way you can make the configuration is through a component that will wrap the BabelText.
 This approach is more usefull when you allready have a compoennt that defines commum styles of text.
 
@@ -251,6 +271,9 @@ class MyCustomTextWidget extends StatelessWidget {
       onTapMapping: {
         'check': (context,currentStyle) => const Icon(Icons.check), 
         '@@': (context,currentStyle) => const Icon(Icons.ac_unit), 
+      },
+      onHoverTooltipMapping: {
+        '<tappable>': (context, currentStyle) => const BabelTooltipMessage('Click to open'),
       },
       innerWidgetMapping: {
         '@@': (context, currentStyle) => Icon(

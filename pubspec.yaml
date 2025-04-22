@@ -1,6 +1,6 @@
 name: babel_text
-description: "A new Flutter package project."
-version: 0.0.1
+description: 'A easy and highly customizable "Text" compoent. Change dynamically styles, add intuitively onTap functions in texts, easly display tooltip messages and more!'
+version: 1.0.0
 
 environment:
   sdk: ^3.7.0
