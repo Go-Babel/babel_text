@@ -1,7 +1,7 @@
 part of 'calculate_span_mixin.dart';
 
-class BabelInline extends TextSpan with CalculateSpans {
-  BabelInline({
+class BabelInlineSpan extends TextSpan with CalculateSpans {
+  BabelInlineSpan({
     required String text,
     required BuildContext context,
     TextStyle baseTextStyle = const TextStyle(),
@@ -13,6 +13,11 @@ class BabelInline extends TextSpan with CalculateSpans {
     Map<String, Widget Function(BuildContext context, TextStyle currentStyle)>?
     innerWidgetMapping,
     Map<String, FutureOr<void> Function(BuildContext context)>? onTapMapping,
+    Map<
+      String,
+      BabelTooltipMessage Function(BuildContext context, TextStyle currentStyle)
+    >?
+    onHoverTooltipMapping,
     super.recognizer,
     super.mouseCursor,
     super.onEnter,
@@ -36,6 +41,10 @@ class BabelInline extends TextSpan with CalculateSpans {
            onTapMapping: {
              ...BabelTextSettings.instance._defaultOnTapMapping,
              ...?onTapMapping,
+           },
+           onHoverTooltipMapping: {
+             ...BabelTextSettings.instance._defaultOnHoverTooltipMapping,
+             ...?onHoverTooltipMapping,
            },
            baseTextStyle: baseTextStyle,
          ),

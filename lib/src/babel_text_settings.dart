@@ -48,6 +48,21 @@ class BabelTextSettings {
   _defaultWidgetMapping = {};
   Map<String, FutureOr<void> Function(BuildContext context)>
   _defaultOnTapMapping = {};
+  Map<
+    String,
+    BabelTooltipMessage Function(BuildContext context, TextStyle currentStyle)
+  >
+  _defaultOnHoverTooltipMapping = {};
+
+  void defaultOnHoverTooltipMapping(
+    Map<
+      String,
+      BabelTooltipMessage Function(BuildContext context, TextStyle currentStyle)
+    >
+    newOnHoverTooltipMapping,
+  ) {
+    _defaultOnHoverTooltipMapping = newOnHoverTooltipMapping;
+  }
 
   void defaultSytleMapping(
     Map<

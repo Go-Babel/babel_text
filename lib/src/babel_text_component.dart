@@ -8,6 +8,7 @@ class BabelText extends StatelessWidget {
     this.innerWidgetMapping,
     this.styleMapping,
     this.onTapMapping,
+    this.onHoverTooltipMapping,
     this.strutStyle,
     this.textAlign,
     this.textDirection,
@@ -36,6 +37,11 @@ class BabelText extends StatelessWidget {
     Widget Function(BuildContext context, TextStyle currentStyle)
   >?
   innerWidgetMapping;
+  final Map<
+    String,
+    BabelTooltipMessage Function(BuildContext context, TextStyle currentStyle)
+  >?
+  onHoverTooltipMapping;
   final EdgeInsets? padding;
   final TextStyle baseTextStyle;
   final StrutStyle? strutStyle;
@@ -74,6 +80,10 @@ class BabelText extends StatelessWidget {
       innerWidgetMapping: {
         ...BabelTextSettings.instance._defaultWidgetMapping,
         ...?innerWidgetMapping,
+      },
+      onHoverTooltipMapping: {
+        ...BabelTextSettings.instance._defaultOnHoverTooltipMapping,
+        ...?onHoverTooltipMapping,
       },
     );
 
