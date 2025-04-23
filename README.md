@@ -1,4 +1,4 @@
-### ▶️ Babel_text: A package for easy dynamic text manipulation.
+### ▶️ babel_text: A package for easy dynamic text manipulation.
 A easy and highly customizable ```Text``` compoent. Change dynamically styles, add intuitively onTap functions in texts, easly display tooltip messages and more!
 
 ### 🗂️ *Summary*
