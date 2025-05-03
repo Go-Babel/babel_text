@@ -18,7 +18,7 @@ A easy and highly customizable ```Text``` compoent. Change dynamically styles, a
 The usage of it *could not* be more simple.<br>See the bellow guide-lines<br>
 
 # Mapping custom style
-> ### Dynamic change text style
+### Dynamic change text style
 What to bold a text whenever you surround it with the _"*"_ caracter?
 Just type the following code:
 
@@ -33,13 +33,13 @@ BabelText(
 ```
 
 # Mapping custom onTap
-> ### Create "on text tap" callbacks
+### Create "on text tap" callbacks
 What to navigate to a screen when tapping a word? Surround
 the target texts with a key that maps to an function!
 
 ```dart
 BabelText(
-  text: 'Hey! <navigateToHome>Tap here<navigateToHome> to go home check',
+  text: 'Hey! <navigateToHome>Tap here<navigateToHome> to go home',
   onTapMapping: {
     '<navigateToHome>': (context) {
       Navigator.of(context).pushNamed('/home');
@@ -49,7 +49,7 @@ BabelText(
 ```
 
 # Mapping custom inner widgets
-> ### Display any widget between texts
+### Display any widget between texts
 You can add an widget _(💡 like an icon!)_ in any place in the text, between any words.<p>Just map it 
 to whatever you want and use the mapped symbol in the text!<br>
 In the example bellow, let's display a handshake icon widget.
@@ -63,10 +63,7 @@ BabelText(
 ```
 
 # Mapping custom tooltip hover text
-> ### Display a tooltip message when the user hover's above an target text
-You can add an widget _(💡 like an icon!)_ in any place in the text, between any words.<p>Just map it 
-to whatever you want and use the mapped symbol in the text!<br>
-In the example bellow, let's display a handshake icon widget.
+### Display a tooltip message when the user hover's above an target text
 ```dart
 BabelText(
   text: 'Hello <description>world!<description>',
