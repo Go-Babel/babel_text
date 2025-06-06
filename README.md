@@ -52,12 +52,16 @@ BabelText(
 ### Display any widget between texts
 You can add an widget _(💡 like an icon!)_ in any place in the text, between any words.<p>Just map it 
 to whatever you want and use the mapped symbol in the text!<br>
-In the example bellow, let's display a handshake icon widget.
+In the example bellow, let's display a handshake icon widget using `BabelWidget` which allows specifying alignment and baseline.
 ```dart
 BabelText(
   text: 'Handshake widget: @@. Amazing!',
   innerWidgetMapping: {
-    '@@': (context, currentStyle) => const Icon(Icons.handshake),
+    '@@': (context, currentStyle) => const BabelWidget(
+      alignment: PlaceholderAlignment.middle,
+      baseline: TextBaseline.alphabetic,
+      child: Icon(Icons.handshake),
+    ),
   },
 ),
 ```
@@ -196,8 +200,16 @@ void main() {
     },
   });
   BabelTextSettings.instance.defaultWidgetMapping({
-    'check': (context,currentStyle) => const Icon(Icons.check), 
-    '@@': (context,currentStyle) => const Icon(Icons.ac_unit), 
+    'check': (context,currentStyle) => const BabelWidget(
+      alignment: PlaceholderAlignment.middle,
+      baseline: TextBaseline.alphabetic,
+      child: Icon(Icons.check),
+    ), 
+    '@@': (context,currentStyle) => const BabelWidget(
+      alignment: PlaceholderAlignment.middle,
+      baseline: TextBaseline.alphabetic,
+      child: Icon(Icons.ac_unit),
+    ), 
   });
   BabelTextSettings.instance.defaultOnHoverTooltipMapping({
     '<tappable>': (context,currentStyle) => const BabelTooltipMessage('Click to open'),
@@ -266,16 +278,25 @@ class MyCustomTextWidget extends StatelessWidget {
       text: text,
       baseTextStyle: style,
       onTapMapping: {
-        'check': (context,currentStyle) => const Icon(Icons.check), 
-        '@@': (context,currentStyle) => const Icon(Icons.ac_unit), 
+        '<navigateToSettings>': (context) {
+            // Example: Navigate to a settings page
+            // Navigator.of(context).pushNamed('/settings');
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Navigate to settings tapped!')),
+            );
+        },
       },
       onHoverTooltipMapping: {
         '<tappable>': (context, currentStyle) => const BabelTooltipMessage('Click to open'),
       },
       innerWidgetMapping: {
-        '@@': (context, currentStyle) => Icon(
-              Icons.open_in_new,
-              color: currentStyle.color,
+        '@@': (context, currentStyle) => BabelWidget(
+              alignment: PlaceholderAlignment.middle,
+              baseline: TextBaseline.alphabetic,
+              child: Icon(
+                Icons.open_in_new,
+                color: currentStyle.color,
+              ),
             ),
       },
       styleMapping: {

@@ -44,7 +44,10 @@ class BabelTextSettings {
         (context, currentStyle) =>
             currentStyle.copyWith(color: Theme.of(context).colorScheme.outline),
   };
-  Map<String, Widget Function(BuildContext context, TextStyle currentStyle)>
+  Map<
+    String,
+    BabelWidget Function(BuildContext context, TextStyle currentStyle)
+  >
   _defaultWidgetMapping = {};
   Map<String, FutureOr<void> Function(BuildContext context)>
   _defaultOnTapMapping = {};
@@ -75,7 +78,10 @@ class BabelTextSettings {
   }
 
   void defaultWidgetMapping(
-    Map<String, Widget Function(BuildContext context, TextStyle currentStyle)>
+    Map<
+      String,
+      BabelWidget Function(BuildContext context, TextStyle currentStyle)
+    >
     newWidgetMapping,
   ) {
     _defaultWidgetMapping = newWidgetMapping;

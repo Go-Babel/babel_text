@@ -10,7 +10,10 @@ class BabelInlineSpan extends TextSpan with CalculateSpans {
       TextStyle Function(BuildContext context, TextStyle currentStyle)
     >?
     styleMapping,
-    Map<String, Widget Function(BuildContext context, TextStyle currentStyle)>?
+    Map<
+      String,
+      BabelWidget Function(BuildContext context, TextStyle currentStyle)
+    >?
     innerWidgetMapping,
     Map<String, FutureOr<void> Function(BuildContext context)>? onTapMapping,
     Map<

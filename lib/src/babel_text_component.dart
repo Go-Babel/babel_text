@@ -34,7 +34,7 @@ class BabelText extends StatelessWidget {
   styleMapping;
   final Map<
     String,
-    Widget Function(BuildContext context, TextStyle currentStyle)
+    BabelWidget Function(BuildContext context, TextStyle currentStyle)
   >?
   innerWidgetMapping;
   final Map<

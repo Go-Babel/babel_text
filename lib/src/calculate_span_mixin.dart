@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
+import 'package:babel_text/src/models/babel_widget.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +22,7 @@ mixin CalculateSpans {
     customStyleMapping,
     required Map<
       String,
-      Widget Function(BuildContext context, TextStyle currentStyle)
+      BabelWidget Function(BuildContext context, TextStyle currentStyle)
     >?
     innerWidgetMapping,
     required Map<String, FutureOr<void> Function(BuildContext context)>?
@@ -180,25 +181,32 @@ mixin CalculateSpans {
           final babelInlineSpan = getBabelInlineSpan();
           final haveTooltip = babelInlineSpan != null;
           saveCurrBuffer();
-          final child = innerWidgetMapping![matchName]!(
+          final BabelWidget babelWidget = innerWidgetMapping![matchName]!(
             context,
             getCurrentStyle(),
           );
           final rec = getCurrentRecognizer();
-          spans.add(
-            WidgetSpan(
-              child:
-                  rec == null
-                      ? haveTooltip
-                          ? Tooltip(richMessage: babelInlineSpan, child: child)
-                          : child
-                      : haveTooltip
+
+          final child =
+              rec == null
+                  ? haveTooltip
                       ? Tooltip(
                         richMessage: babelInlineSpan,
-                        child: InkWell(onTap: rec, child: child),
+                        child: babelWidget.child,
                       )
-                      : InkWell(onTap: rec, child: child),
-            ),
+                      : babelWidget.child
+                  : haveTooltip
+                  ? Tooltip(
+                    richMessage: babelInlineSpan,
+                    child: InkWell(onTap: rec, child: babelWidget.child),
+                  )
+                  : InkWell(onTap: rec, child: babelWidget.child);
+          spans.add(
+            BabelWidget(
+              alignment: PlaceholderAlignment.middle,
+              baseline: TextBaseline.alphabetic,
+              child: child,
+            ).toWidgetSpam(getCurrentStyle()),
           );
         } else if (isStyle) {
           final isOpen = currentlyAppliedStyles.containsKey(matchName);
