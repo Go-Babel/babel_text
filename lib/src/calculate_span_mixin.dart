@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:collection';
-import 'package:babel_text/src/models/babel_widget.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -8,6 +7,7 @@ part 'babel_text_component.dart';
 part 'babel_text_inline_span.dart';
 part 'babel_text_settings.dart';
 part 'models/babel_tooltip.dart';
+part 'models/babel_widget.dart';
 
 const TextStyle _kBlankStyle = TextStyle();
 
@@ -142,7 +142,7 @@ mixin CalculateSpans {
     }
 
     InlineSpan wrapComponentWithTooltipIfNeeded(InlineSpan child) {
-      final babelInlineSpan = getBabelInlineSpan();
+      final BabelInlineSpan? babelInlineSpan = getBabelInlineSpan();
       final haveTooltip = babelInlineSpan != null;
       return haveTooltip
           ? WidgetSpan(

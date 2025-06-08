@@ -1,12 +1,12 @@
-import 'package:flutter/material.dart';
+part of '../calculate_span_mixin.dart';
 
 class BabelWidget {
   final PlaceholderAlignment alignment;
-  final TextBaseline baseline;
+  final TextBaseline? baseline;
   final Widget child;
   const BabelWidget({
-    required this.alignment,
-    required this.baseline,
+    this.alignment = PlaceholderAlignment.middle,
+    this.baseline,
     required this.child,
   });
 
