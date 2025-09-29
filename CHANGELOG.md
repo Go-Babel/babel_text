@@ -1,3 +1,9 @@
+## 2.1.0
+* **NEW**: Added `BabelSelectableText` widget - a selectable text equivalent of `BabelText` with all the same customization features
+* **NEW**: Added `BabelSelectableInline` widget - a widget that creates selectable inline text with babel formatting
+* Support for text selection, copying, and all SelectableText-specific parameters (cursorColor, selectionControls, onSelectionChanged, etc.)
+* Full compatibility with existing babel text features (styleMapping, onTapMapping, innerWidgetMapping, onHoverTooltipMapping)
+
 ## 2.0.2
 "BabelWidget" fields are not required
 

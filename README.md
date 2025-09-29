@@ -1,5 +1,5 @@
 ### ▶️ babel_text: A package for easy dynamic text manipulation.
-A easy and highly customizable ```Text``` compoent. Change dynamically styles, add intuitively onTap functions in texts, easly display tooltip messages and more!
+A easy and highly customizable ```Text``` and ```SelectableText``` component. Change dynamically styles, add intuitively onTap functions in texts, easily display tooltip messages and more!
 
 ### 🗂️ *Summary*
 - [How to use]( #how-to-use)
@@ -7,6 +7,7 @@ A easy and highly customizable ```Text``` compoent. Change dynamically styles, a
     - [Mapping custom onTap](#mapping-custom-ontap)
     - [Mapping custom inner widgets](#mapping-custom-inner-widgets)
     - [Mapping custom tooltip hover text](#mapping-custom-tooltip-hover-text)
+- [Selectable text](#selectable-text)
 - [Combining styles](#combining-styles)
 - [Inline span](#inline-span)
 - [How to config default settings](#how-to-config-default-settings)
@@ -79,6 +80,61 @@ BabelText(
     },
   },
 ),
+```
+
+# Selectable text
+### Make your text selectable for copying
+Need your text to be selectable? Use `BabelSelectableText` instead of `BabelText`. It supports all the same features with the addition of text selection capabilities.
+
+```dart
+BabelSelectableText(
+  text: 'This text is *selectable* and can be <action>copied<action>!',
+  styleMapping: {
+    '*': (context, currentStyle) =>
+      currentStyle.copyWith(fontWeight: FontWeight.bold),
+  },
+  onTapMapping: {
+    '<action>': (context) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Text copied!')),
+      );
+    },
+  },
+),
+```
+
+For inline selectable text, use `BabelSelectableInline`:
+
+```dart
+BabelSelectableInline(
+  text: 'This is <b>selectable<b> inline text with @@!',
+  innerWidgetMapping: {
+    '@@': (context, currentStyle) => const BabelWidget(
+      alignment: PlaceholderAlignment.middle,
+      baseline: TextBaseline.alphabetic,
+      child: Icon(Icons.copy),
+    ),
+  },
+  styleMapping: {
+    '<b>': (context, currentStyle) =>
+        currentStyle.copyWith(fontWeight: FontWeight.bold),
+  },
+)
+```
+
+You can also use `BabelInlineSpan` with `SelectableText.rich`:
+
+```dart
+SelectableText.rich(
+  BabelInlineSpan(
+    text: 'Use <u>BabelInlineSpan<u> with SelectableText.rich!',
+    context: context,
+    styleMapping: {
+      '<u>': (context, currentStyle) =>
+        currentStyle.copyWith(decoration: TextDecoration.underline),
+    },
+  ),
+)
 ```
 
 # Combining styles

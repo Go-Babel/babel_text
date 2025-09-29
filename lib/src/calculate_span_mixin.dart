@@ -1,11 +1,15 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:ui' as ui;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 part 'babel_text_component.dart';
 part 'babel_text_inline_span.dart';
 part 'babel_text_settings.dart';
+part 'babel_selectable_text_component.dart';
+part 'babel_selectable_inline_component.dart';
 part 'models/babel_tooltip.dart';
 part 'models/babel_widget.dart';
 

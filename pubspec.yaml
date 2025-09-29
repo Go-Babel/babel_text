@@ -1,6 +1,6 @@
 name: babel_text
-description: 'A easy and highly customizable "Text" compoent. Change dynamically styles, add intuitively onTap functions in texts, easly display tooltip messages and more!'
-version: 2.0.2
+description: 'A easy and highly customizable "Text" and "SelectableText" component. Change dynamically styles, add intuitively onTap functions in texts, easily display tooltip messages and more!'
+version: 2.1.0
 repository: https://github.com/Go-Babel/babel_text
 issue_tracker: https://github.com/Go-Babel/babel_text/issues
 topics: [text, tooltip, style]
