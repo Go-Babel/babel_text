@@ -1,3 +1,8 @@
+## 2.1.2
+* Fixed `onTapMapping` parsing for symbols that contain regex-special characters.
+* Fixed combined `styleMapping` and `onTapMapping` usage when both share the same marker.
+* Added interaction tests covering complex rich-text tap scenarios for `BabelText` and `BabelSelectableText`.
+
 ## 2.1.1
 * Added package logo/screenshot for pub.dev
 

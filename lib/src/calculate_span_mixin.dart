@@ -43,21 +43,21 @@ mixin CalculateSpans {
     final allInnerSymbols = innerWidgetMapping?.keys ?? [];
     final allOnTapSymbols = onTapMapping?.keys ?? [];
     final allOnHoverTooltipSymbols = onHoverTooltipMapping?.keys ?? [];
-    final allSymbols = [
-          ...allStyleSymbols,
-          ...allInnerSymbols,
-          ...allOnTapSymbols,
-          ...allOnHoverTooltipSymbols,
-        ]
-        .join('|')
-        .replaceAllMapped(
-          RegExp(r'\*|\-|\+|\.'),
-          (match) => '\\${match.group(0)}',
-        );
+    final allSymbols = {
+      ...allStyleSymbols,
+      ...allInnerSymbols,
+      ...allOnTapSymbols,
+      ...allOnHoverTooltipSymbols,
+    }.toList()
+      ..sort((left, right) => right.length.compareTo(left.length));
+
+    if (allSymbols.isEmpty) {
+      return [TextSpan(text: text, style: baseTextStyle)];
+    }
 
     final pattern =
         r'(?<!\\)'
-        '($allSymbols)';
+        '(${allSymbols.map(RegExp.escape).join('|')})';
 
     final LinkedHashMap<String, TextStyle> currentlyAppliedStyles =
         LinkedHashMap();
@@ -212,42 +212,46 @@ mixin CalculateSpans {
               child: child,
             ).toWidgetSpam(getCurrentStyle()),
           );
-        } else if (isStyle) {
-          final isOpen = currentlyAppliedStyles.containsKey(matchName);
+        } else {
+          if (isStyle || isOnTap || isOnHoverTooltip) {
+            saveCurrBuffer();
+          }
 
-          if (isOpen) {
-            saveCurrBuffer();
-            currentlyAppliedStyles.remove(matchName);
-          } else {
-            saveCurrBuffer();
-            final style = customStyleMapping![matchName]!(
-              context,
-              getCurrentStyle(),
-            );
-            currentlyAppliedStyles[matchName] = style;
+          if (isStyle) {
+            final isOpen = currentlyAppliedStyles.containsKey(matchName);
+
+            if (isOpen) {
+              currentlyAppliedStyles.remove(matchName);
+            } else {
+              final style = customStyleMapping![matchName]!(
+                context,
+                getCurrentStyle(),
+              );
+              currentlyAppliedStyles[matchName] = style;
+            }
           }
-        } else if (isOnTap) {
-          final isOpen = currentOnTapApplied.containsKey(matchName);
-          if (isOpen) {
-            saveCurrBuffer();
-            currentOnTapApplied.remove(matchName);
-          } else {
-            saveCurrBuffer();
-            final onTap = onTapMapping![matchName]!;
-            currentOnTapApplied[matchName] = onTap;
+
+          if (isOnTap) {
+            final isOpen = currentOnTapApplied.containsKey(matchName);
+            if (isOpen) {
+              currentOnTapApplied.remove(matchName);
+            } else {
+              final onTap = onTapMapping![matchName]!;
+              currentOnTapApplied[matchName] = onTap;
+            }
           }
-        } else if (isOnHoverTooltip) {
-          final isOpen = currentlyActiveTooltip.containsKey(matchName);
-          if (isOpen) {
-            saveCurrBuffer();
-            currentlyActiveTooltip.remove(matchName);
-          } else {
-            saveCurrBuffer();
-            final tooltip = onHoverTooltipMapping![matchName]!(
-              context,
-              getCurrentStyle(),
-            );
-            currentlyActiveTooltip[matchName] = tooltip;
+
+          if (isOnHoverTooltip) {
+            final isOpen = currentlyActiveTooltip.containsKey(matchName);
+            if (isOpen) {
+              currentlyActiveTooltip.remove(matchName);
+            } else {
+              final tooltip = onHoverTooltipMapping![matchName]!(
+                context,
+                getCurrentStyle(),
+              );
+              currentlyActiveTooltip[matchName] = tooltip;
+            }
           }
         }
 
