@@ -1,3 +1,6 @@
+## 2.1.1
+* Added package logo/screenshot for pub.dev
+
 ## 2.1.0
 * **NEW**: Added `BabelSelectableText` widget - a selectable text equivalent of `BabelText` with all the same customization features
 * **NEW**: Added `BabelSelectableInline` widget - a widget that creates selectable inline text with babel formatting

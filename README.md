@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Go-Babel/babel_text/main/babel_text_logo.png" alt="Babel Text Logo" width="120"/>
+</p>
+
 ### ▶️ babel_text: A package for easy dynamic text manipulation.
 A easy and highly customizable ```Text``` and ```SelectableText``` component. Change dynamically styles, add intuitively onTap functions in texts, easily display tooltip messages and more!
 
