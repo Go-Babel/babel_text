@@ -87,6 +87,15 @@ mixin CalculateSpans {
           };
     }
 
+    T? getLastNonNull<T>(Iterable<T?> values) {
+      for (final value in values.toList().reversed) {
+        if (value != null) {
+          return value;
+        }
+      }
+      return null;
+    }
+
     // For each, let's get the one with the data not null.
     // If both are null, return null.
     BabelTooltipMessage? getTooltipMessageData() {
@@ -118,26 +127,48 @@ mixin CalculateSpans {
             locale: tooltips.where((t) => t.locale != null).firstOrNull?.locale,
             spellOut:
                 tooltips.where((t) => t.spellOut != null).firstOrNull?.spellOut,
+            tooltipTheme: getLastNonNull(
+              tooltips.map((tooltip) => tooltip.tooltipTheme),
+            ),
+            contentTextStyle: getLastNonNull(
+              tooltips.map((tooltip) => tooltip.contentTextStyle),
+            ),
+            textStyleSource: getLastNonNull(
+              tooltips.map((tooltip) => tooltip.textStyleSource),
+            ),
           )
           : null;
     }
 
-    BabelInlineSpan? getBabelInlineSpan() {
-      final tooltipData = getTooltipMessageData();
-      if (tooltipData == null) {
+    TextStyle getTooltipBaseStyle(BabelTooltipMessage tooltipData) {
+      final source =
+          tooltipData.textStyleSource ??
+          BabelTextSettings.instance._defaultTooltipTextStyleSource;
+
+      switch (source) {
+        case BabelTooltipTextStyleSource.flutterTooltipTheme:
+          return tooltipData.contentTextStyle ?? _kBlankStyle;
+        case BabelTooltipTextStyleSource.triggerTextStyle:
+          return getCurrentStyle().merge(tooltipData.contentTextStyle);
+      }
+    }
+
+    BabelInlineSpan? getBabelInlineSpan([BabelTooltipMessage? tooltipData]) {
+      final effectiveTooltipData = tooltipData ?? getTooltipMessageData();
+      if (effectiveTooltipData == null) {
         return null;
       }
       return BabelInlineSpan(
-        text: tooltipData.content,
+        text: effectiveTooltipData.content,
         context: context,
-        baseTextStyle: getCurrentStyle(),
-        recognizer: tooltipData.recognizer,
-        mouseCursor: tooltipData.mouseCursor,
-        onEnter: tooltipData.onEnter,
-        onExit: tooltipData.onExit,
-        semanticsLabel: tooltipData.semanticsLabel,
-        locale: tooltipData.locale,
-        spellOut: tooltipData.spellOut,
+        baseTextStyle: getTooltipBaseStyle(effectiveTooltipData),
+        recognizer: effectiveTooltipData.recognizer,
+        mouseCursor: effectiveTooltipData.mouseCursor,
+        onEnter: effectiveTooltipData.onEnter,
+        onExit: effectiveTooltipData.onExit,
+        semanticsLabel: effectiveTooltipData.semanticsLabel,
+        locale: effectiveTooltipData.locale,
+        spellOut: effectiveTooltipData.spellOut,
         innerWidgetMapping: innerWidgetMapping,
         styleMapping: customStyleMapping,
         onTapMapping: onTapMapping,
@@ -145,17 +176,49 @@ mixin CalculateSpans {
       );
     }
 
+    Widget wrapWithTooltipIfNeeded({
+      required Widget child,
+      BabelTooltipMessage? tooltipData,
+    }) {
+      final effectiveTooltipData = tooltipData ?? getTooltipMessageData();
+      final babelInlineSpan = getBabelInlineSpan(effectiveTooltipData);
+      if (effectiveTooltipData == null || babelInlineSpan == null) {
+        return child;
+      }
+
+      final tooltipTheme = effectiveTooltipData.tooltipTheme;
+      return Tooltip(
+        richMessage: babelInlineSpan,
+        constraints: tooltipTheme?.constraints,
+        padding: tooltipTheme?.padding,
+        margin: tooltipTheme?.margin,
+        verticalOffset: tooltipTheme?.verticalOffset,
+        preferBelow: tooltipTheme?.preferBelow,
+        excludeFromSemantics: tooltipTheme?.excludeFromSemantics,
+        decoration: tooltipTheme?.decoration,
+        textStyle: tooltipTheme?.textStyle,
+        textAlign: tooltipTheme?.textAlign,
+        waitDuration: tooltipTheme?.waitDuration,
+        showDuration: tooltipTheme?.showDuration,
+        exitDuration: tooltipTheme?.exitDuration,
+        triggerMode: tooltipTheme?.triggerMode,
+        enableFeedback: tooltipTheme?.enableFeedback,
+        child: child,
+      );
+    }
+
     InlineSpan wrapComponentWithTooltipIfNeeded(InlineSpan child) {
-      final BabelInlineSpan? babelInlineSpan = getBabelInlineSpan();
-      final haveTooltip = babelInlineSpan != null;
-      return haveTooltip
-          ? WidgetSpan(
-            child: Tooltip(
-              richMessage: babelInlineSpan,
-              child: Text.rich(child),
-            ),
-          )
-          : child;
+      final tooltipData = getTooltipMessageData();
+      if (tooltipData == null) {
+        return child;
+      }
+
+      return WidgetSpan(
+        child: wrapWithTooltipIfNeeded(
+          child: Text.rich(child),
+          tooltipData: tooltipData,
+        ),
+      );
     }
 
     void saveCurrBuffer() {
@@ -182,8 +245,8 @@ mixin CalculateSpans {
         final isOnHoverTooltip = allOnHoverTooltipSymbols.contains(matchName);
 
         if (isInnerWidget) {
-          final babelInlineSpan = getBabelInlineSpan();
-          final haveTooltip = babelInlineSpan != null;
+          final tooltipData = getTooltipMessageData();
+          final haveTooltip = tooltipData != null;
           saveCurrBuffer();
           final BabelWidget babelWidget = innerWidgetMapping![matchName]!(
             context,
@@ -194,15 +257,15 @@ mixin CalculateSpans {
           final child =
               rec == null
                   ? haveTooltip
-                      ? Tooltip(
-                        richMessage: babelInlineSpan,
+                      ? wrapWithTooltipIfNeeded(
                         child: babelWidget.child,
+                        tooltipData: tooltipData,
                       )
                       : babelWidget.child
                   : haveTooltip
-                  ? Tooltip(
-                    richMessage: babelInlineSpan,
+                  ? wrapWithTooltipIfNeeded(
                     child: InkWell(onTap: rec, child: babelWidget.child),
+                    tooltipData: tooltipData,
                   )
                   : InkWell(onTap: rec, child: babelWidget.child);
           spans.add(

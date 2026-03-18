@@ -7,6 +7,12 @@ void main() {
     return MaterialApp(home: Scaffold(body: Center(child: child)));
   }
 
+  tearDown(() {
+    BabelTextSettings.instance.defaultTooltipTextStyleSource(
+      BabelTooltipTextStyleSource.flutterTooltipTheme,
+    );
+  });
+
   const complexScenarioSourceText =
       '''⚽️ Football social media that connects users with other users and clubs through selection partnerships.
 
@@ -69,6 +75,125 @@ In this application, among other things, I delivered:
     final targetBox = boxes.first;
     return box.localToGlobal(targetBox.toRect().center);
   }
+
+  testWidgets('BabelText tooltip uses Flutter tooltip styling by default', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      buildTestApp(
+        BabelText(
+          'Hello <tooltip>world<tooltip>',
+          style: const TextStyle(color: Colors.red),
+          onHoverTooltipMapping: {
+            '<tooltip>':
+                (_, __) => const BabelTooltipMessage('Tooltip content'),
+          },
+        ),
+      ),
+    );
+
+    final tooltip = tester.widget<Tooltip>(find.byType(Tooltip));
+    final richMessage = tooltip.richMessage! as BabelInlineSpan;
+
+    expect(richMessage.style, const TextStyle());
+  });
+
+  testWidgets('BabelText can keep the legacy trigger text tooltip style', (
+    tester,
+  ) async {
+    BabelTextSettings.instance.defaultTooltipTextStyleSource(
+      BabelTooltipTextStyleSource.triggerTextStyle,
+    );
+
+    await tester.pumpWidget(
+      buildTestApp(
+        BabelText(
+          'Hello <tooltip>world<tooltip>',
+          style: const TextStyle(color: Colors.red),
+          onHoverTooltipMapping: {
+            '<tooltip>':
+                (_, __) => const BabelTooltipMessage('Tooltip content'),
+          },
+        ),
+      ),
+    );
+
+    final tooltip = tester.widget<Tooltip>(find.byType(Tooltip));
+    final richMessage = tooltip.richMessage! as BabelInlineSpan;
+
+    expect(richMessage.style?.color, Colors.red);
+  });
+
+  testWidgets('BabelTooltipMessage can override tooltip theme and text mode', (
+    tester,
+  ) async {
+    const tooltipTextStyle = TextStyle(color: Colors.white, fontSize: 15);
+    final tooltipDecoration = BoxDecoration(
+      color: Colors.black87,
+      borderRadius: BorderRadius.circular(10),
+    );
+    const tooltipPadding = EdgeInsets.symmetric(horizontal: 10, vertical: 6);
+
+    await tester.pumpWidget(
+      buildTestApp(
+        BabelText(
+          'Hello <tooltip>world<tooltip>',
+          style: const TextStyle(color: Colors.red),
+          onHoverTooltipMapping: {
+            '<tooltip>':
+                (_, __) => BabelTooltipMessage(
+                  'Tooltip content',
+                  textStyleSource: BabelTooltipTextStyleSource.triggerTextStyle,
+                  contentTextStyle: const TextStyle(
+                    fontWeight: FontWeight.w700,
+                  ),
+                  tooltipTheme: TooltipThemeData(
+                    decoration: tooltipDecoration,
+                    textStyle: tooltipTextStyle,
+                    padding: tooltipPadding,
+                  ),
+                ),
+          },
+        ),
+      ),
+    );
+
+    final tooltip = tester.widget<Tooltip>(find.byType(Tooltip));
+    final richMessage = tooltip.richMessage! as BabelInlineSpan;
+
+    expect(tooltip.decoration, tooltipDecoration);
+    expect(tooltip.textStyle, tooltipTextStyle);
+    expect(tooltip.padding, tooltipPadding);
+    expect(richMessage.style?.color, Colors.red);
+    expect(richMessage.style?.fontWeight, FontWeight.w700);
+  });
+
+  testWidgets('BabelSelectableText also applies tooltip theme overrides', (
+    tester,
+  ) async {
+    const tooltipTextStyle = TextStyle(color: Colors.amber);
+
+    await tester.pumpWidget(
+      buildTestApp(
+        BabelSelectableText(
+          'Hello <tooltip>world<tooltip>',
+          onHoverTooltipMapping: {
+            '<tooltip>':
+                (_, __) => const BabelTooltipMessage(
+                  'Tooltip content',
+                  tooltipTheme: TooltipThemeData(textStyle: tooltipTextStyle),
+                ),
+          },
+        ),
+      ),
+    );
+
+    final tooltip = tester.widget<Tooltip>(find.byType(Tooltip));
+    final richMessage = tooltip.richMessage! as BabelInlineSpan;
+
+    expect(tooltip.textStyle, tooltipTextStyle);
+    expect(richMessage.style, const TextStyle());
+  });
 
   testWidgets('BabelText fires in complex scenario', (tester) async {
     var tapCount = 0;

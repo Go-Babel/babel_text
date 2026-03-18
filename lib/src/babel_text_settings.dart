@@ -56,6 +56,8 @@ class BabelTextSettings {
     BabelTooltipMessage Function(BuildContext context, TextStyle currentStyle)
   >
   _defaultOnHoverTooltipMapping = {};
+  BabelTooltipTextStyleSource _defaultTooltipTextStyleSource =
+      BabelTooltipTextStyleSource.flutterTooltipTheme;
 
   void defaultOnHoverTooltipMapping(
     Map<
@@ -91,5 +93,14 @@ class BabelTextSettings {
     Map<String, FutureOr<void> Function(BuildContext context)> newOnTapMapping,
   ) {
     _defaultOnTapMapping = newOnTapMapping;
+  }
+
+  // When this uses Flutter's tooltip theme, tooltip content starts from the
+  // default Flutter tooltip styling instead of inheriting the text style from
+  // the place where the tooltip was declared.
+  void defaultTooltipTextStyleSource(
+    BabelTooltipTextStyleSource newTextStyleSource,
+  ) {
+    _defaultTooltipTextStyleSource = newTextStyleSource;
   }
 }

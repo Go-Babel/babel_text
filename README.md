@@ -11,6 +11,7 @@ A easy and highly customizable ```Text``` and ```SelectableText``` component. Ch
     - [Mapping custom onTap](#mapping-custom-ontap)
     - [Mapping custom inner widgets](#mapping-custom-inner-widgets)
     - [Mapping custom tooltip hover text](#mapping-custom-tooltip-hover-text)
+    - [Tooltip styling](#tooltip-styling)
 - [Selectable text](#selectable-text)
 - [Combining styles](#combining-styles)
 - [Inline span](#inline-span)
@@ -80,11 +81,91 @@ BabelText(
     '<description>': (context, currentStyle) {
       return BabelTooltipMessage(
         'I will be displayed when the user makes a hover action in the "world" text!',
+        tooltipTheme: TooltipThemeData(
+          decoration: BoxDecoration(
+            color: Colors.black87,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          textStyle: TextStyle(color: Colors.white),
+        ),
       );
     },
   },
 ),
 ```
+
+# Tooltip styling
+### Control tooltip colors and text style
+> ⚠️ Starting in `2.2.0`, Babel tooltips use Flutter's tooltip theme/default styling by default instead of inheriting the text style from the hovered text.
+
+If you already use `ThemeData.tooltipTheme`, Babel tooltips will now follow it automatically:
+
+```dart
+MaterialApp(
+  theme: ThemeData(
+    tooltipTheme: TooltipThemeData(
+      decoration: BoxDecoration(
+        color: Colors.black87,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      textStyle: TextStyle(
+        color: Colors.white,
+        fontSize: 13,
+      ),
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+    ),
+  ),
+  home: const MyPage(),
+)
+```
+
+You can also override the tooltip style per mapped message:
+
+```dart
+BabelText(
+  text: 'Open <docs>docs<docs>',
+  onHoverTooltipMapping: {
+    '<docs>': (context, currentStyle) {
+      return BabelTooltipMessage(
+        'Open docs or package',
+        tooltipTheme: TooltipThemeData(
+          decoration: BoxDecoration(
+            color: Colors.black87,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          textStyle: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        ),
+        contentTextStyle: TextStyle(
+          fontWeight: FontWeight.w600,
+        ),
+      );
+    },
+  },
+)
+```
+
+If you want the previous behavior back globally, switch the tooltip text style source to the trigger text style:
+
+```dart
+BabelTextSettings.instance.defaultTooltipTextStyleSource(
+  BabelTooltipTextStyleSource.triggerTextStyle,
+);
+```
+
+You can also opt into the legacy behavior for only one tooltip:
+
+```dart
+BabelTooltipMessage(
+  'Styled like the surrounding text',
+  textStyleSource: BabelTooltipTextStyleSource.triggerTextStyle,
+)
+```
+
+This works the same way for `BabelText`, `BabelSelectableText`, `BabelInlineSpan`, and `BabelSelectableInline`.
 
 # Selectable text
 ### Make your text selectable for copying
@@ -274,6 +355,9 @@ void main() {
   BabelTextSettings.instance.defaultOnHoverTooltipMapping({
     '<tappable>': (context,currentStyle) => const BabelTooltipMessage('Click to open'),
   });
+  BabelTextSettings.instance.defaultTooltipTextStyleSource(
+    BabelTooltipTextStyleSource.flutterTooltipTheme,
+  );
   runApp(const MyApp());
 }
 ```

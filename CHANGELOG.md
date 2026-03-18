@@ -1,3 +1,11 @@
+## 2.2.0
+* Added per-tooltip `TooltipThemeData` overrides through `BabelTooltipMessage.tooltipTheme`.
+* Added `BabelTooltipMessage.contentTextStyle` to control the rich text style rendered inside a tooltip.
+* Added global tooltip text style configuration with `BabelTextSettings.defaultTooltipTextStyleSource`.
+* Added `BabelTooltipTextStyleSource` so tooltips can use Flutter's tooltip styling or the legacy trigger text styling.
+* Added tests covering tooltip styling behavior for both `BabelText` and `BabelSelectableText`.
+* Warning: tooltip text styling now defaults to Flutter's tooltip theme/default behavior. To keep the previous behavior, switch to `BabelTooltipTextStyleSource.triggerTextStyle`.
+
 ## 2.1.2
 * Fixed `onTapMapping` parsing for symbols that contain regex-special characters.
 * Fixed combined `styleMapping` and `onTapMapping` usage when both share the same marker.
