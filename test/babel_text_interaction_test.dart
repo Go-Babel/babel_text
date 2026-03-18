@@ -11,6 +11,7 @@ void main() {
     BabelTextSettings.instance.defaultTooltipTextStyleSource(
       BabelTooltipTextStyleSource.flutterTooltipTheme,
     );
+    BabelTextSettings.instance.defaultTooltipWaitDuration(null);
   });
 
   const complexScenarioSourceText =
@@ -193,6 +194,59 @@ In this application, among other things, I delivered:
 
     expect(tooltip.textStyle, tooltipTextStyle);
     expect(richMessage.style, const TextStyle());
+  });
+
+  testWidgets('BabelText applies the global default tooltip wait duration', (
+    tester,
+  ) async {
+    const waitDuration = Duration(milliseconds: 650);
+    BabelTextSettings.instance.defaultTooltipWaitDuration(waitDuration);
+
+    await tester.pumpWidget(
+      buildTestApp(
+        BabelText(
+          'Hello <tooltip>world<tooltip>',
+          onHoverTooltipMapping: {
+            '<tooltip>':
+                (_, __) => const BabelTooltipMessage('Tooltip content'),
+          },
+        ),
+      ),
+    );
+
+    final tooltip = tester.widget<Tooltip>(find.byType(Tooltip));
+
+    expect(tooltip.waitDuration, waitDuration);
+  });
+
+  testWidgets('Per-tooltip wait duration overrides the global default', (
+    tester,
+  ) async {
+    BabelTextSettings.instance.defaultTooltipWaitDuration(
+      const Duration(milliseconds: 650),
+    );
+    const localWaitDuration = Duration(milliseconds: 1200);
+
+    await tester.pumpWidget(
+      buildTestApp(
+        BabelText(
+          'Hello <tooltip>world<tooltip>',
+          onHoverTooltipMapping: {
+            '<tooltip>':
+                (_, __) => const BabelTooltipMessage(
+                  'Tooltip content',
+                  tooltipTheme: TooltipThemeData(
+                    waitDuration: localWaitDuration,
+                  ),
+                ),
+          },
+        ),
+      ),
+    );
+
+    final tooltip = tester.widget<Tooltip>(find.byType(Tooltip));
+
+    expect(tooltip.waitDuration, localWaitDuration);
   });
 
   testWidgets('BabelText fires in complex scenario', (tester) async {

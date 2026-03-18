@@ -187,6 +187,8 @@ mixin CalculateSpans {
       }
 
       final tooltipTheme = effectiveTooltipData.tooltipTheme;
+      final defaultTooltipWaitDuration =
+          BabelTextSettings.instance._defaultTooltipWaitDuration;
       return Tooltip(
         richMessage: babelInlineSpan,
         constraints: tooltipTheme?.constraints,
@@ -198,7 +200,7 @@ mixin CalculateSpans {
         decoration: tooltipTheme?.decoration,
         textStyle: tooltipTheme?.textStyle,
         textAlign: tooltipTheme?.textAlign,
-        waitDuration: tooltipTheme?.waitDuration,
+        waitDuration: tooltipTheme?.waitDuration ?? defaultTooltipWaitDuration,
         showDuration: tooltipTheme?.showDuration,
         exitDuration: tooltipTheme?.exitDuration,
         triggerMode: tooltipTheme?.triggerMode,

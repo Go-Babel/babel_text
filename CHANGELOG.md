@@ -1,3 +1,8 @@
+## 2.2.1
+* Added `BabelTextSettings.defaultTooltipWaitDuration(...)` to configure a package-wide default hover delay before tooltips appear.
+* Allowed `BabelTooltipMessage.tooltipTheme.waitDuration` to override the package-wide default for a single tooltip.
+* Updated the README to document tooltip hover delay configuration and precedence.
+
 ## 2.2.0
 * Added per-tooltip `TooltipThemeData` overrides through `BabelTooltipMessage.tooltipTheme`.
 * Added `BabelTooltipMessage.contentTextStyle` to control the rich text style rendered inside a tooltip.

@@ -58,6 +58,7 @@ class BabelTextSettings {
   _defaultOnHoverTooltipMapping = {};
   BabelTooltipTextStyleSource _defaultTooltipTextStyleSource =
       BabelTooltipTextStyleSource.flutterTooltipTheme;
+  Duration? _defaultTooltipWaitDuration;
 
   void defaultOnHoverTooltipMapping(
     Map<
@@ -102,5 +103,9 @@ class BabelTextSettings {
     BabelTooltipTextStyleSource newTextStyleSource,
   ) {
     _defaultTooltipTextStyleSource = newTextStyleSource;
+  }
+
+  void defaultTooltipWaitDuration(Duration? newWaitDuration) {
+    _defaultTooltipWaitDuration = newWaitDuration;
   }
 }

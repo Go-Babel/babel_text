@@ -167,6 +167,34 @@ BabelTooltipMessage(
 
 This works the same way for `BabelText`, `BabelSelectableText`, `BabelInlineSpan`, and `BabelSelectableInline`.
 
+### Configure the hover delay before the tooltip appears
+You can define a package-wide default delay for hover tooltips:
+
+```dart
+BabelTextSettings.instance.defaultTooltipWaitDuration(
+  Duration(milliseconds: 600),
+);
+```
+
+This is useful when Flutter's default tooltip hover timing feels too fast for your app.
+If you don't set this value, Babel falls back to Flutter's normal tooltip wait duration.
+
+If you need a different value for only one tooltip, override it in `tooltipTheme`:
+
+```dart
+BabelTooltipMessage(
+  'Open docs or package',
+  tooltipTheme: TooltipThemeData(
+    waitDuration: Duration(milliseconds: 1200),
+  ),
+)
+```
+
+Priority order:
+- `BabelTooltipMessage.tooltipTheme.waitDuration`
+- `BabelTextSettings.instance.defaultTooltipWaitDuration(...)`
+- Flutter's normal tooltip default
+
 # Selectable text
 ### Make your text selectable for copying
 Need your text to be selectable? Use `BabelSelectableText` instead of `BabelText`. It supports all the same features with the addition of text selection capabilities.
