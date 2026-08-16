@@ -43,13 +43,14 @@ mixin CalculateSpans {
     final allInnerSymbols = innerWidgetMapping?.keys ?? [];
     final allOnTapSymbols = onTapMapping?.keys ?? [];
     final allOnHoverTooltipSymbols = onHoverTooltipMapping?.keys ?? [];
-    final allSymbols = {
-      ...allStyleSymbols,
-      ...allInnerSymbols,
-      ...allOnTapSymbols,
-      ...allOnHoverTooltipSymbols,
-    }.toList()
-      ..sort((left, right) => right.length.compareTo(left.length));
+    final allSymbols =
+        {
+            ...allStyleSymbols,
+            ...allInnerSymbols,
+            ...allOnTapSymbols,
+            ...allOnHoverTooltipSymbols,
+          }.toList()
+          ..sort((left, right) => right.length.compareTo(left.length));
 
     if (allSymbols.isEmpty) {
       return [TextSpan(text: text, style: baseTextStyle)];
@@ -216,6 +217,8 @@ mixin CalculateSpans {
       }
 
       return WidgetSpan(
+        alignment: PlaceholderAlignment.baseline,
+        baseline: TextBaseline.alphabetic,
         child: wrapWithTooltipIfNeeded(
           child: Text.rich(child),
           tooltipData: tooltipData,

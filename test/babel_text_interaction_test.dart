@@ -60,10 +60,7 @@ In this application, among other things, I delivered:
     expect(start, isNonNegative);
 
     final textPainter = TextPainter(
-      text: TextSpan(
-        text: fullText,
-        style: DefaultTextStyle.of(element).style,
-      ),
+      text: TextSpan(text: fullText, style: DefaultTextStyle.of(element).style),
       textDirection: Directionality.of(element),
     )..layout(maxWidth: box.size.width);
 
@@ -194,6 +191,31 @@ In this application, among other things, I delivered:
 
     expect(tooltip.textStyle, tooltipTextStyle);
     expect(richMessage.style, const TextStyle());
+  });
+
+  testWidgets('Tooltip-wrapped text keeps the surrounding text baseline', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      buildTestApp(
+        BabelSelectableText(
+          'Before <tooltip>linked text<tooltip> after',
+          onHoverTooltipMapping: {
+            '<tooltip>':
+                (_, __) => const BabelTooltipMessage('Tooltip content'),
+          },
+        ),
+      ),
+    );
+
+    final selectableText = tester.widget<SelectableText>(
+      find.byType(SelectableText),
+    );
+    final widgetSpan =
+        selectableText.textSpan!.children!.whereType<WidgetSpan>().single;
+
+    expect(widgetSpan.alignment, PlaceholderAlignment.baseline);
+    expect(widgetSpan.baseline, TextBaseline.alphabetic);
   });
 
   testWidgets('BabelText applies the global default tooltip wait duration', (

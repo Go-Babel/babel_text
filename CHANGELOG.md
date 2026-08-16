@@ -1,3 +1,7 @@
+## 2.2.2
+* Fixed the vertical alignment of text wrapped with hover tooltips by preserving the surrounding alphabetic baseline.
+* Added a regression test for tooltip-enabled inline text alignment.
+
 ## 2.2.1
 * Added `BabelTextSettings.defaultTooltipWaitDuration(...)` to configure a package-wide default hover delay before tooltips appear.
 * Allowed `BabelTooltipMessage.tooltipTheme.waitDuration` to override the package-wide default for a single tooltip.
